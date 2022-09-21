@@ -1,0 +1,11 @@
+#!/bin/bash
+myIPs=3.89.101.240,54.234.111.224,107.20.14.223,54.91.167.242,18.207.124.0
+
+IFS=',' read -ra myArray <<< "$myIPs"
+for ip in "${myArray[@]}"
+do 
+    echo "My IP is : $ip"
+    ssh -O StrictHostKeyChecking=no -i Devops.pem ec2-user@ip "hostname -i"
+    scp -i Devops.pem tomcat.sh  ec2-user@ip:/tmp/
+    ssh -i Devops.pem ec2-user@$ip "bash /tmp/tomcat.sh"
+done    
